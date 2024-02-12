@@ -195,6 +195,10 @@ public:
 
             float normlen = sqrtf(normal.x * normal.x + normal.y * normal.y + normal.z * normal.z);
             normal.x /= normlen; normal.y /= normlen; normal.z /= normlen;
+
+            // only show triangle if it's not occulted
+            if (normal.z < 0)
+            {
                 // project triangle from 3D --> 2D
                 MultiplyMatrixVector(triTranslated.p[0], triProjected.p[0], matProj);
                 MultiplyMatrixVector(triTranslated.p[1], triProjected.p[1], matProj);
@@ -217,6 +221,7 @@ public:
                     triProjected.p[1].x, triProjected.p[1].y,
                     triProjected.p[2].x, triProjected.p[2].y,
                     PIXEL_SOLID, FG_WHITE);
+            }
 
         }
 
