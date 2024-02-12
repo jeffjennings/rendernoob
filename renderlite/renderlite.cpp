@@ -12,6 +12,11 @@ struct vec3d
 struct triangle
 {
     vec3d p[3];
+
+    // triangle symbol
+    wchar_t sym;
+    // triangle color
+    short col;
 };
 
 struct mesh
@@ -239,10 +244,25 @@ public:
                 normal.y * (triTranslated.p[0].y - vCamera.y) +
                 normal.z * (triTranslated.p[0].z - vCamera.z) < 0.0f)
             {
+                // illuminate triangle with light coming from -z
+                vec3d light_source = { 0.0f, 0.0f, -1.0f };
+                float ldlen = sqrtf(light_source.x * light_source.x + light_source.y * light_source.y + light_source.z * light_source.z);
+                light_source.x /= ldlen; light_source.y /= ldlen; light_source.z /= ldlen;
+
+                // dot product b/t normal of triangle plane and light source 
+                float dp = normal.x * light_source.x + normal.y * light_source.y + normal.z * light_source.z;
+
+                // set triangle color and symbol values
+                CHAR_INFO color = GetColour(dp);
+                triTranslated.col = color.Attributes;
+                triTranslated.sym = color.Char.UnicodeChar;
+
                 // project triangle from 3D --> 2D
                 MultiplyMatrixVector(triTranslated.p[0], triProjected.p[0], matProj);
                 MultiplyMatrixVector(triTranslated.p[1], triProjected.p[1], matProj);
                 MultiplyMatrixVector(triTranslated.p[2], triProjected.p[2], matProj);
+                triProjected.col = triTranslated.col;
+                triProjected.sym = triTranslated.sym;
 
                 // scale field into screen viewing area 
                 triProjected.p[0].x += 1.0f; triProjected.p[0].y += 1.0f;
