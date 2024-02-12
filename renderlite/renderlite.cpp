@@ -280,7 +280,13 @@ public:
                 FillTriangle(triProjected.p[0].x, triProjected.p[0].y,
                     triProjected.p[1].x, triProjected.p[1].y,
                     triProjected.p[2].x, triProjected.p[2].y,
-                    PIXEL_SOLID, FG_WHITE);
+                    triProjected.sym, triProjected.col);
+                
+                // show wireframe
+                //DrawTriangle(triProjected.p[0].x, triProjected.p[0].y,
+                //    triProjected.p[1].x, triProjected.p[1].y,
+                //    triProjected.p[2].x, triProjected.p[2].y,
+                //    PIXEL_SOLID, FG_BLUE);
             }
 
         }
