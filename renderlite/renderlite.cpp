@@ -91,6 +91,24 @@ public:
             { 1.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    1.0f, 0.0f, 0.0f },
 
         };
+
+        // projection matrix for projection (multiplication) of a 3D vector to 2D screen.
+        // vector [x,y,z] --> [a * f * x, f * y, g * z], 
+        // aspect ratio a = h / w (height, width coordinates on 2d screen),
+        // f = 1 / tan(theta / 2), field of view (angle) theta is normalized to [-1, 1]
+        // (https://www.youtube.com/watch?v=ih20l3pJoeU&list=PLrOv9FMX8xJE8NgepZR1etrsU63fDDGxO&index=24&ab_channel=javidx9&t=1067).
+        // g =  [z_far / (z_far - z_near)] - [(z_far * z_near) / (z_far - z_near)]
+        // account for apparent motion decreasing at larger viewing distance z:  
+        // x' = x / z, y' = y / z ==>
+        // [a * f / z * x, f / z * y, g * z] -->
+        // [a * f / z * x, f / z * y , q * (z - z_near)], q = [z_far / (z_far - z_near)].
+        // want the projection matrix to multiply any 3d vector by to project it to 2D:
+        // [x, y, z, 1] * 
+        // | a * f      0       0           0 | <-- projection matrix
+        // |  0         f       0           0 |
+        // |  0         0       q           1 |
+        // |  0         0   -z_near * q     0 |
+        // = [a * f * x, f * y, q * (z - z_near), z] = [a * f / z * x, f / z * y, q * (z - z_near) / z, 1]
 };
 
 
