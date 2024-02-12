@@ -172,6 +172,12 @@ public:
             MultiplyMatrixVector(triRotatedZ.p[0], triRotatedZX.p[0], matRotX);
             MultiplyMatrixVector(triRotatedZ.p[1], triRotatedZX.p[1], matRotX);
             MultiplyMatrixVector(triRotatedZ.p[2], triRotatedZX.p[2], matRotX);
+
+            // translate triangle before projection (offset z-coordinate into the screen)
+            triTranslated = triRotatedZX;
+            triTranslated.p[0].z = triRotatedZX.p[0].z + 3.0f;
+            triTranslated.p[1].z = triRotatedZX.p[1].z + 3.0f;
+            triTranslated.p[2].z = triRotatedZX.p[2].z + 3.0f;
         return true;
     }
 };
