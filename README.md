@@ -1,5 +1,5 @@
 # rendernoob
-Basic 3D rendering engines and projects built from scratch
+Basic 3D rendering engines and projects, built from scratch to learn about rendering techniques and implementations.
 
 Projects
 --------
