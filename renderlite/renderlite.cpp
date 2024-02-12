@@ -263,9 +263,9 @@ public:
 
             // translate triangle before projection (offset z-coordinate into the screen)
             triTranslated = triRotatedZX;
-            triTranslated.p[0].z = triRotatedZX.p[0].z + 3.0f;
-            triTranslated.p[1].z = triRotatedZX.p[1].z + 3.0f;
-            triTranslated.p[2].z = triRotatedZX.p[2].z + 3.0f;
+            triTranslated.p[0].z = triRotatedZX.p[0].z + 8.0f;
+            triTranslated.p[1].z = triRotatedZX.p[1].z + 8.0f;
+            triTranslated.p[2].z = triRotatedZX.p[2].z + 8.0f;
 
             // calculate normal to triangle
             vec3d normal, line1, line2;
