@@ -24,6 +24,49 @@ struct triangle
 struct mesh
 {
     vector<triangle> tris;
+
+    bool LoadFromObjectFile(string sFilename)
+    {
+        ifstream fi(sFilename);
+        if (!fi.is_open())
+            return false;
+
+        // local cache of vertices
+        vector<vec3d> vertices;
+
+        // while not at end of file
+        while (!fi.eof())
+        {
+            // assume line length <= 128 characters
+            char line[128];
+            fi.getline(line, 128);
+
+            strstream ss;
+            ss << line;
+
+            // store character at start of line
+            char cSol;
+
+            // if 'v', the line is a vertex
+            if (line[0] == 'v')
+            {
+                vec3d vv;
+                ss >> cSol >> vv.x >> vv.y >> vv.z;
+                vertices.push_back(vv);
+            }
+
+            // if 'f', the line is a triangle
+            if (line[0] == 'f')
+            {
+                int ff[3];
+                ss >> cSol >> ff[0] >> ff[1] >> ff[2];
+                // make triangle
+                tris.push_back({ vertices[ff[0] - 1], vertices[ff[1] - 1], vertices[ff[2] - 1] });
+            }
+        }
+
+        return true;
+    }
 };
 
 struct mat4x4
