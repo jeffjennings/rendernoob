@@ -189,6 +189,7 @@ public:
             line2.y = triTranslated.p[2].y - triTranslated.p[0].y;
             line2.z = triTranslated.p[2].z - triTranslated.p[0].z;
 
+            // cross product
             normal.x = line1.y * line2.z - line1.z * line2.y;
             normal.y = line1.z * line2.x - line1.x * line2.z;
             normal.z = line1.x * line2.y - line1.y * line2.x;
@@ -197,7 +198,11 @@ public:
             normal.x /= normlen; normal.y /= normlen; normal.z /= normlen;
 
             // only show triangle if it's not occulted
-            if (normal.z < 0)
+            // (i.e. if dot product is nonzero; if z-component of triangle's normal 
+            // projected onto the line b/t the camera and the triangle in 3D space is <90 deg)
+            if (normal.x * (triTranslated.p[0].x - vCamera.x) + 
+                normal.y * (triTranslated.p[0].y - vCamera.y) +
+                normal.z * (triTranslated.p[0].z - vCamera.z) < 0.0f)
             {
                 // project triangle from 3D --> 2D
                 MultiplyMatrixVector(triTranslated.p[0], triProjected.p[0], matProj);
