@@ -4,6 +4,7 @@
 #include <fstream>
 #include <strstream>
 #include <iostream>
+#include <algorithm>
 #include "olcConsoleGameEngine.h"
 using namespace std;
 
@@ -245,6 +246,9 @@ public:
         matRotX.m[2][1] = -sinf(fTheta * 0.5f);
         matRotX.m[2][2] = cosf(fTheta * 0.5f);
         matRotX.m[3][3] = 1;
+
+        // vector for triangles we want to draw
+        vector<triangle> vecTrianglesToRaster;
 
         // draw triangles on screen
         for (auto tri : meshCube.tris)
