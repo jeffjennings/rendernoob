@@ -4,6 +4,8 @@
  #include "olcConsoleGameEngine.h"
 #include <fstream>
 #include <strstream>
+#include <iostream>
+#include "olcConsoleGameEngine.h"
 using namespace std;
 
 struct vec3d
