@@ -157,6 +157,21 @@ public:
         matRotX.m[2][1] = -sinf(fTheta * 0.5f);
         matRotX.m[2][2] = cosf(fTheta * 0.5f);
         matRotX.m[3][3] = 1;
+
+        // draw triangles on screen
+        for (auto tri : meshCube.tris)
+        {
+            triangle triProjected, triTranslated, triRotatedZ, triRotatedZX;
+
+            // rotate triangle about z-axis
+            MultiplyMatrixVector(tri.p[0], triRotatedZ.p[0], matRotZ);
+            MultiplyMatrixVector(tri.p[1], triRotatedZ.p[1], matRotZ);
+            MultiplyMatrixVector(tri.p[2], triRotatedZ.p[2], matRotZ);
+
+            // rotate triangle about x-axis
+            MultiplyMatrixVector(triRotatedZ.p[0], triRotatedZX.p[0], matRotX);
+            MultiplyMatrixVector(triRotatedZ.p[1], triRotatedZX.p[1], matRotX);
+            MultiplyMatrixVector(triRotatedZ.p[2], triRotatedZX.p[2], matRotX);
         return true;
     }
 };
