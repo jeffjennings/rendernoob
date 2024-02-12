@@ -30,6 +30,42 @@ Original works located at:
 GNU GPLv3
 	https://github.com/OneLoneCoder/videos/blob/master/LICENSE
 
+Functionality
+~~~~~~~~~~~~~
+Wrapper for initialization and display of windows console
+
+Usage
+~~~~~
+This class is abstract, so you must inherit from it. Override the OnUserCreate() function
+with all the stuff you need for your application (for thready reasons it's best to do
+this in this function and not your class constructor). Override the OnUserUpdate(float fElapsedTime)
+function with the good stuff, it gives you the elapsed time since the last call so you
+can modify your stuff dynamically. Both functions should return true, unless you need
+the application to close.
+
+	int main()
+	{
+		// Use olcConsoleGameEngine derived app
+		OneLoneCoder_Example game;
+
+		// Create a console with resolution 160x100 characters
+		// Each character occupies 8x8 pixels
+		game.ConstructConsole(160, 100, 8, 8);
+
+		// Start the engine!
+		game.Start();
+
+		return 0;
+	}
+
+Input is also handled for you - interrogate the m_keys[] array with the virtual
+keycode you want to know about. bPressed is set for the frame the key is pressed down
+in, bHeld is set if the key is held down, bReleased is set for the frame the key
+is released in. The same applies to mouse! m_mousePosX and Y can be used to get
+the current cursor position, and m_mouse[1..5] returns the mouse buttons.
+
+The draw routines treat characters like pixels. By default they are set to white solid
+blocks - but you can draw any unicode character, using any of the colours listed below.
 */
 
 #pragma once
