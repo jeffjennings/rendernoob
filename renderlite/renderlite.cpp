@@ -178,6 +178,20 @@ public:
             triTranslated.p[0].z = triRotatedZX.p[0].z + 3.0f;
             triTranslated.p[1].z = triRotatedZX.p[1].z + 3.0f;
             triTranslated.p[2].z = triRotatedZX.p[2].z + 3.0f;
+
+            // calculate normal to triangle
+            vec3d normal, line1, line2;
+            line1.x = triTranslated.p[1].x - triTranslated.p[0].x;
+            line1.y = triTranslated.p[1].y - triTranslated.p[0].y;
+            line1.z = triTranslated.p[1].z - triTranslated.p[0].z;
+
+            line2.x = triTranslated.p[2].x - triTranslated.p[0].x;
+            line2.y = triTranslated.p[2].y - triTranslated.p[0].y;
+            line2.z = triTranslated.p[2].z - triTranslated.p[0].z;
+
+            normal.x = line1.y * line2.z - line1.z * line2.y;
+            normal.y = line1.z * line2.x - line1.x * line2.z;
+            normal.z = line1.x * line2.y - line1.y * line2.x;
         return true;
     }
 };
