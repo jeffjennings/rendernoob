@@ -24,3 +24,12 @@ struct mat4x4
     // 4x4 matrix
     float m[4][4] = { 0 };
 };
+
+class olcEngine3D : public olcConsoleGameEngine
+{
+public:
+    olcEngine3D()
+    {
+        m_sAppName = L"3D rendering demo";
+    }
+};
