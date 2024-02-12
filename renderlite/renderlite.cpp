@@ -328,19 +328,35 @@ public:
                 triProjected.p[1].y *= 0.5f * (float)ScreenHeight();
                 triProjected.p[2].y *= 0.5f * (float)ScreenHeight();
 
-                // rasterize triangle
-                FillTriangle(triProjected.p[0].x, triProjected.p[0].y,
-                    triProjected.p[1].x, triProjected.p[1].y,
-                    triProjected.p[2].x, triProjected.p[2].y,
-                    triProjected.sym, triProjected.col);
-                
-                // show wireframe
-  /*              DrawTriangle(triProjected.p[0].x, triProjected.p[0].y,
-                    triProjected.p[1].x, triProjected.p[1].y,
-                    triProjected.p[2].x, triProjected.p[2].y,
-                    PIXEL_SOLID, FG_BLUE);*/
+                // store triangle for z-sorting 
+                vecTrianglesToRaster.push_back(triProjected);                
             }
 
+        }
+
+        // sort triangles by midpoint z of each (average of z of the triangle's 3 points), 
+        // using lambda function evaluating a pair of triangles (a hack, the "painter's algorithm")
+        sort(vecTrianglesToRaster.begin(), vecTrianglesToRaster.end(), [](triangle& t1, triangle& t2)
+        {
+                float z1 = (t1.p[0].z + t1.p[1].z + t1.p[2].z) / 3.0f;
+                float z2 = (t2.p[0].z + t2.p[1].z + t2.p[2].z) / 3.0f;
+                // return boolean to decide if positions of the two triangles should be swapped (one in front of other)
+                return z1 > z2;
+        });
+
+        for (auto& triProjected : vecTrianglesToRaster)
+        {
+            // rasterize triangle
+            FillTriangle(triProjected.p[0].x, triProjected.p[0].y,
+                triProjected.p[1].x, triProjected.p[1].y,
+                triProjected.p[2].x, triProjected.p[2].y,
+                triProjected.sym, triProjected.col);
+
+            // show wireframe
+/*              DrawTriangle(triProjected.p[0].x, triProjected.p[0].y,
+                  triProjected.p[1].x, triProjected.p[1].y,
+                  triProjected.p[2].x, triProjected.p[2].y,
+                  PIXEL_SOLID, FG_BLUE);*/
         }
 
         return true;
