@@ -195,6 +195,10 @@ public:
 
             float normlen = sqrtf(normal.x * normal.x + normal.y * normal.y + normal.z * normal.z);
             normal.x /= normlen; normal.y /= normlen; normal.z /= normlen;
+                // project triangle from 3D --> 2D
+                MultiplyMatrixVector(triTranslated.p[0], triProjected.p[0], matProj);
+                MultiplyMatrixVector(triTranslated.p[1], triProjected.p[1], matProj);
+                MultiplyMatrixVector(triTranslated.p[2], triProjected.p[2], matProj);
         return true;
     }
 };
