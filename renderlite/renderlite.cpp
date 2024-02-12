@@ -32,6 +32,16 @@ public:
     {
         m_sAppName = L"3D rendering demo";
     }
+
+private:
+    mesh meshCube;
+    // projection matrix
+    mat4x4 matProj;
+    // viewing angle theta
+    float fTheta;
+    // position of camera
+    vec3d vCamera;
+
     // matrix-vector multiplication function
     void MultiplyMatrixVector(vec3d& i, vec3d& o, mat4x4& m)
     {
