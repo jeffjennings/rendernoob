@@ -33,3 +33,12 @@ public:
         m_sAppName = L"3D rendering demo";
     }
 };
+
+
+int main()
+{
+    olcEngine3D demo;
+    if (demo.ConstructConsole(256, 240, 4, 4))
+        demo.Start();
+    return 0;
+}
