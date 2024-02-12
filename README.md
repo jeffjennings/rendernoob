@@ -1,2 +1,2 @@
 # rendernoob
-Basic 3D rendering engine and projects built from scratch
+Basic 3D rendering engines and projects built from scratch
