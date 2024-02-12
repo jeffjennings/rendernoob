@@ -131,6 +131,15 @@ public:
 
         return true;
     }
+
+
+    bool OnUserUpdate(float fElapsedTime) override
+    {
+        // clear screen from top-left to bottom-right
+        Fill(0, 0, ScreenWidth(), ScreenHeight(), PIXEL_SOLID, FG_BLACK);
+
+        return true;
+    }
 };
 
 
