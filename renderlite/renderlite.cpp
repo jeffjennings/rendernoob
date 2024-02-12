@@ -1,7 +1,5 @@
 // renderlite.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
-
- #include "olcConsoleGameEngine.h"
 #include <fstream>
 #include <strstream>
 #include <iostream>
@@ -178,6 +176,8 @@ public:
             { 1.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    1.0f, 0.0f, 0.0f },
 
         };
+
+        //meshCube.LoadFromObjectFile("./ship.obj");
 
         // projection matrix for projection (multiplication) of a 3D vector to 2D screen.
         // vector [x,y,z] --> [a * f * x, f * y, g * z], 
