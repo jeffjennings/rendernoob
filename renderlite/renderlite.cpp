@@ -192,6 +192,9 @@ public:
             normal.x = line1.y * line2.z - line1.z * line2.y;
             normal.y = line1.z * line2.x - line1.x * line2.z;
             normal.z = line1.x * line2.y - line1.y * line2.x;
+
+            float normlen = sqrtf(normal.x * normal.x + normal.y * normal.y + normal.z * normal.z);
+            normal.x /= normlen; normal.y /= normlen; normal.z /= normlen;
         return true;
     }
 };
