@@ -214,6 +214,23 @@ private:
 
         return matrix;
     }
+
+    mat4x4 Matrix_MakeProjection(float fFovDeg, float fAspectRatio, float fNear, float fFar)
+    {
+        float fFovRad = 1.0f / tanf(fFovDeg * 0.5f / 180.0f * 3.14159f);
+
+        mat4x4 matrix;
+
+        matrix.m[0][0] = fAspectRatio * fFovRad;
+        matrix.m[1][1] = fFovRad;
+        matrix.m[2][2] = fFar / (fFar - fNear);
+        matrix.m[3][2] = (-fFar * fNear) / (fFar - fNear);
+        matrix.m[2][3] = 1.0f;
+        matrix.m[3][3] = 0.0f;
+
+        return matrix;
+    }
+
     void Matrix_MultiplyVector(mat4x4& m, vec3d &i)
     {
         vec3d v;
