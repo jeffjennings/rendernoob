@@ -106,7 +106,10 @@ private:
     mat4x4 matProj;
     // viewing angle theta (spins world transform matrix)
     float fTheta;
+    // direction camera is facing (rotation about y)
+    float fYaw;
 
+    
     // vector arithmetic utility functions
     vec3d vectorAdd(vec3d& v1, vec3d& v2)
     {
@@ -118,12 +121,12 @@ private:
         return { v1.x - v2.x, v1.y - v2.y, v1.z - v2.z };
     }
 
-    vec3d Vector_Mul(vec3d& v, float k)
+    vec3d vectorMul(vec3d& v, float k)
     {
         return { v.x * k, v.y * k, v.z * k };
     }
 
-    vec3d Vector_Div(vec3d& v, float k)
+    vec3d vectorDiv(vec3d& v, float k)
     {
         return { v.x / k, v.y / k, v.z / k };
     }
@@ -274,7 +277,7 @@ private:
         newForward = vectorNorm(newForward);
 
         // new up direction (y-direction)
-        vec3d overlap = Vector_Mul(newForward, vectorDot(up, newForward));
+        vec3d overlap = vectorMul(newForward, vectorDot(up, newForward));
         vec3d newUp = vectorSub(up, overlap);
         newUp = vectorNorm(newUp);
 
@@ -430,6 +433,22 @@ public:
 
     bool OnUserUpdate(float fElapsedTime) override
     {
+
+        // user input to move camera
+        if (GetKey(VK_UP).bHeld)
+            vCamera.y += 8.0f * fElapsedTime;
+        if (GetKey(VK_DOWN).bHeld)
+            vCamera.y -= 8.0f * fElapsedTime;
+        //if (GetKey(VK_LEFT).bHeld)
+        //    vCamera.x += 8.0f * fElapsedTime;
+        //if (GetKey(VK_RIGHT).bHeld)
+        //    vCamera.x -= 8.0f * fElapsedTime;
+
+        if (GetKey(L'A').bHeld)
+            fYaw -= 2.0f * fElapsedTime;
+        if (GetKey(L'D').bHeld)
+            fYaw += 2.0f * fElapsedTime;
+
         // clear screen from top-left to bottom-right
         Fill(0, 0, ScreenWidth(), ScreenHeight(), PIXEL_SOLID, FG_BLACK);
 
