@@ -481,6 +481,14 @@ public:
         matWorld = Matrix_MultiplyMatrix(matWorld, matTrans);
 
 
+        vLookDir = { 0,0,1 };
+        vec3d vUp = { 0,1,0 };
+        vec3d vTarget = Vector_Add(vCamera, vLookDir);
+
+        mat4x4 matCamera = Matrix_PointAt(vCamera, vTarget, vUp);
+        mat4x4 matView = Matrix_QuickInverse(matCamera);
+
+
         // store triangles for later rasterization
         vector<triangle> vecTrianglesToRaster;
 
