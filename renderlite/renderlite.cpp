@@ -468,17 +468,27 @@ public:
             // only show triangle if it's not occulted
             // (i.e. if dot product is nonzero; if z-component of triangle's normal 
             // projected onto the line b/t the camera and the triangle in 3D space is <90 deg)
-            if (normal.x * (triTranslated.p[0].x - vCamera.x) + 
-                normal.y * (triTranslated.p[0].y - vCamera.y) +
-                normal.z * (triTranslated.p[0].z - vCamera.z) < 0.0f)
+            //if (normal.x * (triTranslated.p[0].x - vCamera.x) + 
+            //    normal.y * (triTranslated.p[0].y - vCamera.y) +
+            //    normal.z * (triTranslated.p[0].z - vCamera.z) < 0.0f)
+            //{
+            // get ray from triangle to camera
+            vec3d vCameraRay = Vector_Sub(triTransformed.p[0], vCamera);
+            // if ray is aligned w/ normal, triangle is visible
+            if (Vector_DotProduct(normal, vCameraRay) < 0.0f)
             {
+
                 // illuminate triangle with light coming from -z
-                vec3d light_source = { 0.0f, 0.0f, -1.0f };
-                float ldlen = sqrtf(light_source.x * light_source.x + light_source.y * light_source.y + light_source.z * light_source.z);
-                light_source.x /= ldlen; light_source.y /= ldlen; light_source.z /= ldlen;
+                //vec3d light_source = { 0.0f, 0.0f, -1.0f };
+                //float ldlen = sqrtf(light_source.x * light_source.x + light_source.y * light_source.y + light_source.z * light_source.z);
+                //light_source.x /= ldlen; light_source.y /= ldlen; light_source.z /= ldlen;
+                vec3d light_dir = { 0.0f, 1.0f, -1.0f };           
+                light_dir = Vector_Normalize(light_dir);
 
                 // dot product b/t normal of triangle plane and light source 
-                float dp = normal.x * light_source.x + normal.y * light_source.y + normal.z * light_source.z;
+                //float dp = normal.x * light_source.x + normal.y * light_source.y + normal.z * light_source.z;
+                float dp = max(0.1f, Vector_DotProduct(light_dir, normal));
+
 
                 // set triangle color and symbol values
                 CHAR_INFO color = GetColour(dp);
