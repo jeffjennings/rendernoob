@@ -498,7 +498,7 @@ public:
                 vec3d light_dir = { 0.0f, 1.0f, -1.0f };           
                 light_dir = Vector_Normalize(light_dir);
 
-                // dot product b/t normal of triangle plane and light source 
+                // dot product b/t triangle normal and light source 
                 //float dp = normal.x * light_source.x + normal.y * light_source.y + normal.z * light_source.z;
                 float dp = max(0.1f, Vector_DotProduct(light_dir, normal));
 
@@ -510,7 +510,7 @@ public:
                 triTransformed.col = color.Attributes;
                 triTransformed.sym = color.Char.UnicodeChar;
 
-                // project triangle from 3D --> 2D
+                // project triangle from 3D to 2D
                 //MultiplyMatrixVector(triTranslated.p[0], triProjected.p[0], matProj);
                 //MultiplyMatrixVector(triTranslated.p[1], triProjected.p[1], matProj);
                 //MultiplyMatrixVector(triTranslated.p[2], triProjected.p[2], matProj);
@@ -522,12 +522,12 @@ public:
                 triProjected.col = triTransformed.col;
                 triProjected.sym = triTransformed.sym;
 
-                // normalize coordinates
+                // scale into visible screen area (normalize into Cartesian space)
                 triProjected.p[0] = Vector_Div(triProjected.p[0], triProjected.p[0].w);
                 triProjected.p[1] = Vector_Div(triProjected.p[1], triProjected.p[1].w);
                 triProjected.p[2] = Vector_Div(triProjected.p[2], triProjected.p[2].w);
 
-                // scale field into screen viewing area 
+                // offset verticles into visible normalized space
                 //triProjected.p[0].x += 1.0f; triProjected.p[0].y += 1.0f;
                 //triProjected.p[1].x += 1.0f; triProjected.p[1].y += 1.0f;
                 //triProjected.p[2].x += 1.0f; triProjected.p[2].y += 1.0f;
