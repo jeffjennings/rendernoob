@@ -94,8 +94,26 @@ private:
     // position of camera
     vec3d vCamera;
 
-    // matrix-vector multiplication function
-    void MultiplyMatrixVector(vec3d& i, vec3d& o, mat4x4& m)
+    vec3d Vector_Add(vec3d& v1, vec3d& v2)
+    {
+        return { v1.x + v2.x, v1.x + v2.y, v1.z + v2.z };
+    }
+
+    vec3d Vector_Sub(vec3d& v1, vec3d& v2)
+    {
+        return { v1.x - v2.x, v1.y - v2.y, v1.z - v2.z };
+    }
+
+    vec3d Vector_Mul(vec3d& v, float k)
+    {
+        return { v.x * k, v.y * k, v.z * k };
+    }
+
+    vec3d Vector_Div(vec3d& v, float k)
+    {
+        return { v.x / k, v.y / k, v.z / k };
+    }
+
     {
         o.x = i.x * m.m[0][0] + i.y * m.m[1][0] + i.z * m.m[2][0] + m.m[3][0];
         o.y = i.x * m.m[0][1] + i.y * m.m[1][1] + i.z * m.m[2][1] + m.m[3][1];
