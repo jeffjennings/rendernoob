@@ -130,11 +130,17 @@ private:
         return v;
     }
 
+    float Vector_Length(vec3d& v)
+    {
+        return sqrtf(Vector_DotProduct(v, v));
+    }
 
-        // reduce 4d to 3d
+    vec3d Vector_Normalize(vec3d& v)
         if (w != 0.0f)
         {
-            o.x /= w; o.y /= w, o.z /= w;
+        float len = Vector_Length(v);
+        
+        return { v.x / len, v.y / len, v.z / len };
         }
     }
 
