@@ -8,6 +8,11 @@
 #include "olcConsoleGameEngine.h"
 using namespace std;
 
+// char asset[] = "ship.obj";
+char asset[] = "teapot.obj";
+bool show_wireframe = false;
+float zdepth = 6.0f;
+
 struct vec3d
 {
     float x = 0;
@@ -330,6 +335,7 @@ public:
 
         meshCube.LoadFromObjectFile("ship.obj");
 
+        meshCube.LoadFromObjectFile(asset);
 
         // projection matrix for projection (multiplication) of a 3D vector to 2D screen.
         // vector [x,y,z] --> [a * f * x, f * y, g * z], 
@@ -404,6 +410,7 @@ public:
 
         mat4x4 matTrans;
         matTrans = Matrix_MakeTranslation(0.0f, 0.0f, 16.0f);
+        matTrans = Matrix_MakeTranslation(0.0f, 0.0f, zdepth);
 
         mat4x4 matWorld;
         matWorld = Matrix_MakeIdentity();
@@ -554,11 +561,13 @@ public:
                 triProjected.p[2].x, triProjected.p[2].y,
                 triProjected.sym, triProjected.col);
 
-            // show wireframe
-              //DrawTriangle(triProjected.p[0].x, triProjected.p[0].y,
-              //    triProjected.p[1].x, triProjected.p[1].y,
-              //    triProjected.p[2].x, triProjected.p[2].y,
-              //    PIXEL_SOLID, FG_BLUE);
+            // show wireframe (triangle edges)
+            if (show_wireframe) {
+                DrawTriangle(triProjected.p[0].x, triProjected.p[0].y,
+                    triProjected.p[1].x, triProjected.p[1].y,
+                    triProjected.p[2].x, triProjected.p[2].y,
+                    PIXEL_SOLID, FG_BLUE);
+            }
         }
 
         return true;
