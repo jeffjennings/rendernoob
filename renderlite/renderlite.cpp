@@ -18,7 +18,8 @@ struct vec3d
     float x = 0;
     float y = 0;
     float z = 0;
-    float w = 1;
+    // 4th term for easy matrix-vector multiplication
+    float w = 1; 
 };
 
 struct triangle
@@ -95,18 +96,17 @@ public:
 
 private:
     mesh meshCube;
-    // projection matrix
-    mat4x4 matProj;
-    // viewing angle theta
-    float fTheta;
-    // position of camera
+    // position of camera in world space
     vec3d vCamera;
-
+    // projection matrix (converts from view space to screen space)
+    mat4x4 matProj;
+    // viewing angle theta (spins world transform matrix)
+    float fTheta;
 
     // vector arithmetic utility functions
     vec3d Vector_Add(vec3d& v1, vec3d& v2)
     {
-        return { v1.x + v2.x, v1.x + v2.y, v1.z + v2.z };
+        return { v1.x + v2.x, v1.y + v2.y, v1.z + v2.z };
     }
 
     vec3d Vector_Sub(vec3d& v1, vec3d& v2)
@@ -146,11 +146,11 @@ private:
     }
 
     vec3d Vector_Normalize(vec3d& v)
-        {
+    {
         float len = Vector_Length(v);
         
         return { v.x / len, v.y / len, v.z / len };
-        }
+    }
 
 
     // matrix utility functions
@@ -333,9 +333,10 @@ public:
 
         //};
 
-        meshCube.LoadFromObjectFile("ship.obj");
 
+        // load 3d asset from .obj file
         meshCube.LoadFromObjectFile(asset);
+
 
         // projection matrix for projection (multiplication) of a 3D vector to 2D screen.
         // vector [x,y,z] --> [a * f * x, f * y, g * z], 
@@ -374,7 +375,7 @@ public:
         //matProj.m[3][2] = -fNear * fFar / (fFar - fNear);
         //matProj.m[3][3] = 0.0f;
 
-        // replacing the above with utility function call
+        // replacing the above with utility function to make the projection matrix
         matProj = Matrix_MakeProjection(90.0f, (float)ScreenHeight() / (float)ScreenWidth(), 0.1f, 1000.0f);
 
         return true;
@@ -386,9 +387,10 @@ public:
         // clear screen from top-left to bottom-right
         Fill(0, 0, ScreenWidth(), ScreenHeight(), PIXEL_SOLID, FG_BLACK);
 
-        // rotate about z- and x-axis
+        // set up world transform
         mat4x4 matRotZ, matRotX;
-        //fTheta += 1.0f * fElapsedTime;
+        // rotate about z- and x-axis over time
+        fTheta += 1.0f * fElapsedTime;
 
         //// rotation about z
         //matRotZ.m[0][0] = cosf(fTheta);
@@ -409,16 +411,18 @@ public:
         matRotX = Matrix_MakeRotationX(fTheta);
 
         mat4x4 matTrans;
-        matTrans = Matrix_MakeTranslation(0.0f, 0.0f, 16.0f);
+        // how far into screen to translate triangle
         matTrans = Matrix_MakeTranslation(0.0f, 0.0f, zdepth);
 
         mat4x4 matWorld;
         matWorld = Matrix_MakeIdentity();
+        // rotate
         matWorld = Matrix_MultiplyMatrix(matRotZ, matRotX);
+        // translate
         matWorld = Matrix_MultiplyMatrix(matWorld, matTrans);
 
 
-        // vector for triangles we want to draw
+        // store triangles for later rasterization
         vector<triangle> vecTrianglesToRaster;
 
         // draw triangles on screen
@@ -449,7 +453,9 @@ public:
             triTransformed.p[2] = Matrix_MultiplyVector(matWorld, tri.p[2]);
 
          
+            // calculate triangle normal
             vec3d normal, line1, line2;
+            // lines on either side of triangle
             //line1.x = triTranslated.p[1].x - triTranslated.p[0].x;
             //line1.y = triTranslated.p[1].y - triTranslated.p[0].y;
             //line1.z = triTranslated.p[1].z - triTranslated.p[0].z;
@@ -460,7 +466,7 @@ public:
             line1 = Vector_Sub(triTransformed.p[1], triTransformed.p[0]);
             line2 = Vector_Sub(triTransformed.p[2], triTransformed.p[0]);
 
-            // cross product to get normal to triangle
+            // normal to triangle surface
             //normal.x = line1.y * line2.z - line1.z * line2.y;
             //normal.y = line1.z * line2.x - line1.x * line2.z;
             //normal.z = line1.x * line2.y - line1.y * line2.x;
