@@ -176,6 +176,98 @@ private:
         return vectorAdd(lineStart, lineToIntersect);
     }
 
+
+    // returns number of triangles that need to be drawn after check clipping
+    int triClipPlane(vec3d planePoint, vec3d planeNormal, triangle& inTri, triangle& outTri1, triangle& outTri2)
+    {
+        planeNormal = vectorNorm(planeNormal);
+
+        // return signed shortest distance from point to plane (plane normal must be normalized)
+        auto dist = [&](vec3d& p)
+            {
+                vec3d n = vectorNorm(p);
+                return (planeNormal.x * p.x + planeNormal.y * p.y + planeNormal.z * p.z - vectorDot(planeNormal, planePoint));
+            };
+
+        // temp arrays for points on inside (+) / outside (-) of plane
+        vec3d* inPoint[3];
+        vec3d* outPoint[3];
+        // number of points in/outside
+        int nIn = 0; 
+        int nOut = 0;
+
+        // get signed distance to plane for each point of triangle
+        float d0 = dist(inTri.p[0]);
+        float d1 = dist(inTri.p[1]);
+        float d2 = dist(inTri.p[2]);
+
+        // pointers
+        if (d0 >= 0) { inPoint[nIn++] = &inTri.p[0]; }
+        else { outPoint[nOut++] = &inTri.p[0]; }
+        if (d1 >= 0) { inPoint[nIn++] = &inTri.p[1]; }
+        else { outPoint[nOut++] = &inTri.p[1]; }
+        if (d2 >= 0) { inPoint[nIn++] = &inTri.p[2]; }
+        else { outPoint[nOut++] = &inTri.p[2]; }
+
+
+        // classify triangle points, break input triangle into 
+        // smaller output triangles if clipping.
+        
+        // all points outside plane, so clip whole triangle
+        if (nIn == 0)                   
+            return 0; 
+
+        // all points inside plane, so do nothing
+        if (nIn == 3)
+        {            
+            outTri1 = inTri;
+            return 1;
+        }
+
+        // 2 points on triangle outside plane, so clip to make 1 new triangle
+        if (nIn == 1 && nOut == 2)
+        {
+            // copy appearance info to new triangle
+            outTri1.col = inTri.col;
+            outTri1.sym = inTri.sym;
+
+            // keep inside point
+            outTri1.p[0] = *inPoint[0];
+
+            // 2 new points of triangle where original
+            // triangle sides intersect with plane
+            outTri1.p[1] = vectorIntersectPlane(planePoint, planeNormal, *inPoint[0], *outPoint[0]);
+            outTri1.p[2] = vectorIntersectPlane(planePoint, planeNormal, *inPoint[0], *outPoint[1]);
+
+            // return newly formed triangle
+            return 1;
+        }
+
+        // 2 points on triangle outside plane, so clip to make quad (2 new triangles)
+        if (nIn == 2 && nOut == 1)
+        {
+            outTri1.col = inTri.col;
+            outTri1.sym = inTri.sym;
+            outTri2.col = inTri.col;
+            outTri2.sym = inTri.sym;
+
+            // 1st triangle has 2 inside points and 1 new point where 1 side of 
+            // triangles intersects plane
+            outTri1.p[0] = *inPoint[0];
+            outTri1.p[1] = *inPoint[1];
+            outTri1.p[2] = vectorIntersectPlane(planePoint, planeNormal, *inPoint[0], *outPoint[0]);
+
+            // 2nd triangle has 1 inside point, 1 new point where side of
+            // triangle intersects plane, 1 new point above
+            outTri2.p[0] = *inPoint[1];
+            outTri2.p[1] = outTri1.p[2];
+            outTri2.p[2] = vectorIntersectPlane(planePoint, planeNormal, *inPoint[1], *outPoint[0]);
+
+            return 2;
+        }
+    }
+
+
     // matrix utility functions
     mat4x4 matrixIden()
     {
