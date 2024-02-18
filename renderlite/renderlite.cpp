@@ -433,9 +433,20 @@ public:
         // clear screen from top-left to bottom-right
         Fill(0, 0, ScreenWidth(), ScreenHeight(), PIXEL_SOLID, FG_BLACK);
 
-        // set up world transform
+        // world matrix
+        mat4x4 matWorld;
+        matWorld = Matrix_MakeIdentity();
+
+        // translation matrix
+        mat4x4 matTrans;
+        // how far into screen to translate triangle
+        matTrans = Matrix_MakeTranslation(0.0f, 0.0f, zdepth);
+
+        // rotation matrices
+        if (rotate_obj)
+        {
         mat4x4 matRotZ, matRotX;
-        // rotate about z- and x-axis over time
+            // rotate over time
         fTheta += 1.0f * fElapsedTime;
 
         //// rotation about z
@@ -456,7 +467,7 @@ public:
         //matRotX.m[3][3] = 1;
         matRotX = Matrix_MakeRotationX(fTheta);
 
-        mat4x4 matTrans;
+            // rotate world matrix
         // how far into screen to translate triangle
         matTrans = Matrix_MakeTranslation(0.0f, 0.0f, zdepth);
 
@@ -464,7 +475,9 @@ public:
         matWorld = Matrix_MakeIdentity();
         // rotate
         matWorld = Matrix_MultiplyMatrix(matRotZ, matRotX);
-        // translate
+        }            
+
+        // translate world matrix
         matWorld = Matrix_MultiplyMatrix(matWorld, matTrans);
 
 
