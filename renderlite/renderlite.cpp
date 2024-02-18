@@ -417,25 +417,31 @@ public:
         // draw triangles on screen
         for (auto tri : meshCube.tris)
         {
-            triangle triProjected, triTranslated, triRotatedZ, triRotatedZX;
+            //triangle triProjected, triTranslated, triRotatedZ, triRotatedZX;
+            triangle triProjected, triTransformed;
 
             // rotate triangle about z-axis
-            MultiplyMatrixVector(tri.p[0], triRotatedZ.p[0], matRotZ);
-            MultiplyMatrixVector(tri.p[1], triRotatedZ.p[1], matRotZ);
-            MultiplyMatrixVector(tri.p[2], triRotatedZ.p[2], matRotZ);
+            //MultiplyMatrixVector(tri.p[0], triRotatedZ.p[0], matRotZ);
+            //MultiplyMatrixVector(tri.p[1], triRotatedZ.p[1], matRotZ);
+            //MultiplyMatrixVector(tri.p[2], triRotatedZ.p[2], matRotZ);
 
             // rotate triangle about x-axis
-            MultiplyMatrixVector(triRotatedZ.p[0], triRotatedZX.p[0], matRotX);
-            MultiplyMatrixVector(triRotatedZ.p[1], triRotatedZX.p[1], matRotX);
-            MultiplyMatrixVector(triRotatedZ.p[2], triRotatedZX.p[2], matRotX);
+            //MultiplyMatrixVector(triRotatedZ.p[0], triRotatedZX.p[0], matRotX);
+            //MultiplyMatrixVector(triRotatedZ.p[1], triRotatedZX.p[1], matRotX);
+            //MultiplyMatrixVector(triRotatedZ.p[2], triRotatedZX.p[2], matRotX);
 
             // translate triangle before projection (offset z-coordinate into the screen)
-            triTranslated = triRotatedZX;
-            triTranslated.p[0].z = triRotatedZX.p[0].z + 8.0f;
-            triTranslated.p[1].z = triRotatedZX.p[1].z + 8.0f;
-            triTranslated.p[2].z = triRotatedZX.p[2].z + 8.0f;
+            //triTranslated = triRotatedZX;
+            //triTranslated.p[0].z = triRotatedZX.p[0].z + 8.0f;
+            //triTranslated.p[1].z = triRotatedZX.p[1].z + 8.0f;
+            //triTranslated.p[2].z = triRotatedZX.p[2].z + 8.0f;
 
-            // calculate normal to triangle
+            // world matrix transform
+            triTransformed.p[0] = Matrix_MultiplyVector(matWorld, tri.p[0]);
+            triTransformed.p[1] = Matrix_MultiplyVector(matWorld, tri.p[1]);
+            triTransformed.p[2] = Matrix_MultiplyVector(matWorld, tri.p[2]);
+
+         
             vec3d normal, line1, line2;
             line1.x = triTranslated.p[1].x - triTranslated.p[0].x;
             line1.y = triTranslated.p[1].y - triTranslated.p[0].y;
