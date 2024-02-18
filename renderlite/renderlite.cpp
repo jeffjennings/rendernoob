@@ -627,9 +627,17 @@ public:
                 triProjected.sym = triTransformed.sym;
 
                 // scale into visible screen area (normalize into Cartesian space)
-                triProjected.p[0] = Vector_Div(triProjected.p[0], triProjected.p[0].w);
-                triProjected.p[1] = Vector_Div(triProjected.p[1], triProjected.p[1].w);
-                triProjected.p[2] = Vector_Div(triProjected.p[2], triProjected.p[2].w);
+                triProjected.p[0] = vectorDiv(triProjected.p[0], triProjected.p[0].w);
+                triProjected.p[1] = vectorDiv(triProjected.p[1], triProjected.p[1].w);
+                triProjected.p[2] = vectorDiv(triProjected.p[2], triProjected.p[2].w);
+
+                // un-invert x, y axes
+                triProjected.p[0].x *= -1.0f;
+                triProjected.p[1].x *= -1.0f;
+                triProjected.p[2].x *= -1.0f;
+                triProjected.p[0].y *= -1.0f;
+                triProjected.p[1].y *= -1.0f;
+                triProjected.p[2].y *= -1.0f;
 
                 // offset verticles into visible normalized space
                 //triProjected.p[0].x += 1.0f; triProjected.p[0].y += 1.0f;
