@@ -402,6 +402,15 @@ public:
         //matRotX.m[3][3] = 1;
         matRotX = Matrix_MakeRotationX(fTheta);
 
+        mat4x4 matTrans;
+        matTrans = Matrix_MakeTranslation(0.0f, 0.0f, 16.0f);
+
+        mat4x4 matWorld;
+        matWorld = Matrix_MakeIdentity();
+        matWorld = Matrix_MultiplyMatrix(matRotZ, matRotX);
+        matWorld = Matrix_MultiplyMatrix(matWorld, matTrans);
+
+
         // vector for triangles we want to draw
         vector<triangle> vecTrianglesToRaster;
 
