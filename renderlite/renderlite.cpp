@@ -492,20 +492,36 @@ public:
 
                 // set triangle color and symbol values
                 CHAR_INFO color = GetColour(dp);
-                triTranslated.col = color.Attributes;
-                triTranslated.sym = color.Char.UnicodeChar;
+                //triTranslated.col = color.Attributes;
+                //triTranslated.sym = color.Char.UnicodeChar;
+                triTransformed.col = color.Attributes;
+                triTransformed.sym = color.Char.UnicodeChar;
 
                 // project triangle from 3D --> 2D
-                MultiplyMatrixVector(triTranslated.p[0], triProjected.p[0], matProj);
-                MultiplyMatrixVector(triTranslated.p[1], triProjected.p[1], matProj);
-                MultiplyMatrixVector(triTranslated.p[2], triProjected.p[2], matProj);
-                triProjected.col = triTranslated.col;
-                triProjected.sym = triTranslated.sym;
+                //MultiplyMatrixVector(triTranslated.p[0], triProjected.p[0], matProj);
+                //MultiplyMatrixVector(triTranslated.p[1], triProjected.p[1], matProj);
+                //MultiplyMatrixVector(triTranslated.p[2], triProjected.p[2], matProj);
+                //triProjected.col = triTranslated.col;
+                //triProjected.sym = triTranslated.sym;
+                triProjected.p[0] = Matrix_MultiplyVector(matProj, triTransformed.p[0]);
+                triProjected.p[1] = Matrix_MultiplyVector(matProj, triTransformed.p[1]);
+                triProjected.p[2] = Matrix_MultiplyVector(matProj, triTransformed.p[2]);
+                triProjected.col = triTransformed.col;
+                triProjected.sym = triTransformed.sym;
+
+                // normalize coordinates
+                triProjected.p[0] = Vector_Div(triProjected.p[0], triProjected.p[0].w);
+                triProjected.p[1] = Vector_Div(triProjected.p[1], triProjected.p[1].w);
+                triProjected.p[2] = Vector_Div(triProjected.p[2], triProjected.p[2].w);
 
                 // scale field into screen viewing area 
-                triProjected.p[0].x += 1.0f; triProjected.p[0].y += 1.0f;
-                triProjected.p[1].x += 1.0f; triProjected.p[1].y += 1.0f;
-                triProjected.p[2].x += 1.0f; triProjected.p[2].y += 1.0f;
+                //triProjected.p[0].x += 1.0f; triProjected.p[0].y += 1.0f;
+                //triProjected.p[1].x += 1.0f; triProjected.p[1].y += 1.0f;
+                //triProjected.p[2].x += 1.0f; triProjected.p[2].y += 1.0f;
+                vec3d vOffsetView = { 1,1,0 };
+                triProjected.p[0] = Vector_Add(triProjected.p[0], vOffsetView);
+                triProjected.p[1] = Vector_Add(triProjected.p[1], vOffsetView);
+                triProjected.p[2] = Vector_Add(triProjected.p[2], vOffsetView);
 
                 triProjected.p[0].x *= 0.5f * (float)ScreenWidth();
                 triProjected.p[1].x *= 0.5f * (float)ScreenWidth();
