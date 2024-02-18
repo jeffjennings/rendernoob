@@ -449,6 +449,14 @@ public:
         if (GetKey(L'D').bHeld)
             fYaw += 2.0f * fElapsedTime;
 
+        // rescaled vLookDir vector, w/ scaling determining forward camera motion
+        vec3d vForward = vectorMul(vLookDir, 8.0f * fElapsedTime);
+        if (GetKey(L'W').bHeld)
+            vCamera = vectorAdd(vCamera, vForward);
+        if (GetKey(L'S').bHeld)
+            vCamera = vectorSub(vCamera, vForward);
+
+
         // clear screen from top-left to bottom-right
         Fill(0, 0, ScreenWidth(), ScreenHeight(), PIXEL_SOLID, FG_BLACK);
 
@@ -494,9 +502,17 @@ public:
         matWorld = matrixMult(matWorld, matTrans);
 
 
-        vLookDir = { 0,0,1 };
+        //vLookDir = { 0,0,1 };
         vec3d vUp = { 0,1,0 };
-        vec3d vTarget = vectorAdd(vCamera, vLookDir);
+        //vec3d vTarget = vectorAdd(vCamera, vLookDir);
+        // forward vector can be rotated by yaw, so want variable look dir:
+        // start w/ target vector along z-axis
+        vec3d vTarget = { 0,0,1 };
+        // rotate this vector by 'fYaw' rad (camera turning left/right)
+        mat4x4 matCameraRot = matrixRotY(fYaw);
+        vLookDir = matvecMult(matCameraRot, vTarget);
+        // add new forward-facing vector to camera location to give camera a target to look at
+        vTarget = vectorAdd(vCamera, vLookDir);
 
         mat4x4 matCamera = matrixPointAt(vCamera, vTarget, vUp);
         mat4x4 matView = matrixInv(matCamera);
