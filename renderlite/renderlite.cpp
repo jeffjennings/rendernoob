@@ -160,6 +160,22 @@ private:
     }
 
 
+    // test and return point where line intersects plane (using a point on plane and its normal to return its eqn)
+    vec3d vectorIntersectPlane(vec3d& planePoint, vec3d& planeNormal, vec3d& lineStart, vec3d& lineEnd)
+    {
+        planeNormal = vectorNorm(planeNormal);
+
+        float planeD = -vectorDot(planeNormal, planePoint);
+        float ad = vectorDot(lineStart, planeNormal);
+        float bd = vectorDot(lineEnd, planeNormal);
+        float tt = (-planeD - ad) / (bd - ad);
+
+        vec3d lineStartToEnd = vectorSub(lineEnd, lineStart);
+        vec3d lineToIntersect = vectorMul(lineStartToEnd, tt);
+
+        return vectorAdd(lineStart, lineToIntersect);
+    }
+
     // matrix utility functions
     mat4x4 matrixIden()
     {
