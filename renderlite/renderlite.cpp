@@ -85,7 +85,7 @@ class olcEngine3D : public olcConsoleGameEngine
 public:
     olcEngine3D()
     {
-        m_sAppName = L"3D rendering demo";
+        m_sAppName = L"Render";
     }
 
 private:
@@ -234,7 +234,7 @@ private:
         return matrix;
     }
 
-    void Matrix_MultiplyVector(mat4x4& m, vec3d &i)
+    vec3d Matrix_MultiplyVector(mat4x4& m, vec3d &i)
     {
         vec3d v;
 
