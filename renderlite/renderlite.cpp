@@ -443,21 +443,27 @@ public:
 
          
             vec3d normal, line1, line2;
-            line1.x = triTranslated.p[1].x - triTranslated.p[0].x;
-            line1.y = triTranslated.p[1].y - triTranslated.p[0].y;
-            line1.z = triTranslated.p[1].z - triTranslated.p[0].z;
+            //line1.x = triTranslated.p[1].x - triTranslated.p[0].x;
+            //line1.y = triTranslated.p[1].y - triTranslated.p[0].y;
+            //line1.z = triTranslated.p[1].z - triTranslated.p[0].z;
 
-            line2.x = triTranslated.p[2].x - triTranslated.p[0].x;
-            line2.y = triTranslated.p[2].y - triTranslated.p[0].y;
-            line2.z = triTranslated.p[2].z - triTranslated.p[0].z;
+            //line2.x = triTranslated.p[2].x - triTranslated.p[0].x;
+            //line2.y = triTranslated.p[2].y - triTranslated.p[0].y;
+            //line2.z = triTranslated.p[2].z - triTranslated.p[0].z;
+            line1 = Vector_Sub(triTransformed.p[1], triTransformed.p[0]);
+            line2 = Vector_Sub(triTransformed.p[2], triTransformed.p[0]);
 
-            // cross product
-            normal.x = line1.y * line2.z - line1.z * line2.y;
-            normal.y = line1.z * line2.x - line1.x * line2.z;
-            normal.z = line1.x * line2.y - line1.y * line2.x;
+            // cross product to get normal to triangle
+            //normal.x = line1.y * line2.z - line1.z * line2.y;
+            //normal.y = line1.z * line2.x - line1.x * line2.z;
+            //normal.z = line1.x * line2.y - line1.y * line2.x;
+            normal = Vector_CrossProduct(line1, line2);
 
-            float normlen = sqrtf(normal.x * normal.x + normal.y * normal.y + normal.z * normal.z);
-            normal.x /= normlen; normal.y /= normlen; normal.z /= normlen;
+            // normalize
+            //float normlen = sqrtf(normal.x * normal.x + normal.y * normal.y + normal.z * normal.z);
+            //normal.x /= normlen; normal.y /= normlen; normal.z /= normlen;
+            normal = Vector_Normalize(normal);
+
 
             // only show triangle if it's not occulted
             // (i.e. if dot product is nonzero; if z-component of triangle's normal 
