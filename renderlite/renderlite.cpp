@@ -445,36 +445,30 @@ public:
         // rotation matrices
         if (rotate_obj)
         {
-        mat4x4 matRotZ, matRotX;
+            mat4x4 matRotZ, matRotX;
             // rotate over time
-        fTheta += 1.0f * fElapsedTime;
+            fTheta += 1.0f * fElapsedTime;
 
-        //// rotation about z
-        //matRotZ.m[0][0] = cosf(fTheta);
-        //matRotZ.m[0][1] = sinf(fTheta);
-        //matRotZ.m[1][0] = -sinf(fTheta);
-        //matRotZ.m[1][1] = cosf(fTheta);
-        //matRotZ.m[2][2] = 1;
-        //matRotZ.m[3][3] = 1;
-        matRotZ = Matrix_MakeRotationZ(fTheta * 0.5f);
+            //// rotation about z
+            //matRotZ.m[0][0] = cosf(fTheta);
+            //matRotZ.m[0][1] = sinf(fTheta);
+            //matRotZ.m[1][0] = -sinf(fTheta);
+            //matRotZ.m[1][1] = cosf(fTheta);
+            //matRotZ.m[2][2] = 1;
+            //matRotZ.m[3][3] = 1;
+            matRotZ = Matrix_MakeRotationZ(fTheta * 0.5f);
 
-        //// rotation about x by different rate than about z to avoid gimball lock
-        //matRotX.m[0][0] = 1;
-        //matRotX.m[1][1] = cosf(fTheta * 0.5f);
-        //matRotX.m[1][2] = sinf(fTheta * 0.5f);
-        //matRotX.m[2][1] = -sinf(fTheta * 0.5f);
-        //matRotX.m[2][2] = cosf(fTheta * 0.5f);
-        //matRotX.m[3][3] = 1;
-        matRotX = Matrix_MakeRotationX(fTheta);
+            //// rotation about x by different rate than about z to avoid gimball lock
+            //matRotX.m[0][0] = 1;
+            //matRotX.m[1][1] = cosf(fTheta * 0.5f);
+            //matRotX.m[1][2] = sinf(fTheta * 0.5f);
+            //matRotX.m[2][1] = -sinf(fTheta * 0.5f);
+            //matRotX.m[2][2] = cosf(fTheta * 0.5f);
+            //matRotX.m[3][3] = 1;
+            matRotX = Matrix_MakeRotationX(fTheta);
 
             // rotate world matrix
-        // how far into screen to translate triangle
-        matTrans = Matrix_MakeTranslation(0.0f, 0.0f, zdepth);
-
-        mat4x4 matWorld;
-        matWorld = Matrix_MakeIdentity();
-        // rotate
-        matWorld = Matrix_MultiplyMatrix(matRotZ, matRotX);
+            matWorld = Matrix_MultiplyMatrix(matRotZ, matRotX);
         }            
 
         // translate world matrix
@@ -496,7 +490,7 @@ public:
         for (auto tri : meshCube.tris)
         {
             //triangle triProjected, triTranslated, triRotatedZ, triRotatedZX;
-            triangle triProjected, triTransformed;
+            triangle triProjected, triTransformed, triViewed;
 
             // rotate triangle about z-axis
             //MultiplyMatrixVector(tri.p[0], triRotatedZ.p[0], matRotZ);
@@ -577,15 +571,23 @@ public:
                 triTransformed.col = color.Attributes;
                 triTransformed.sym = color.Char.UnicodeChar;
 
-                // project triangle from 3D to 2D
+                // convert from world space to view space
+                triViewed.p[0] = Matrix_MultiplyVector(matView, triTransformed.p[0]);
+                triViewed.p[1] = Matrix_MultiplyVector(matView, triTransformed.p[1]);
+                triViewed.p[2] = Matrix_MultiplyVector(matView, triTransformed.p[2]);
+
+                // project triangle from 3D to 2D 
                 //MultiplyMatrixVector(triTranslated.p[0], triProjected.p[0], matProj);
                 //MultiplyMatrixVector(triTranslated.p[1], triProjected.p[1], matProj);
                 //MultiplyMatrixVector(triTranslated.p[2], triProjected.p[2], matProj);
                 //triProjected.col = triTranslated.col;
                 //triProjected.sym = triTranslated.sym;
-                triProjected.p[0] = Matrix_MultiplyVector(matProj, triTransformed.p[0]);
-                triProjected.p[1] = Matrix_MultiplyVector(matProj, triTransformed.p[1]);
-                triProjected.p[2] = Matrix_MultiplyVector(matProj, triTransformed.p[2]);
+                //triProjected.p[0] = Matrix_MultiplyVector(matProj, triTransformed.p[0]);
+                //triProjected.p[1] = Matrix_MultiplyVector(matProj, triTransformed.p[1]);
+                //triProjected.p[2] = Matrix_MultiplyVector(matProj, triTransformed.p[2]);
+                triProjected.p[0] = Matrix_MultiplyVector(matProj, triViewed.p[0]);
+                triProjected.p[1] = Matrix_MultiplyVector(matProj, triViewed.p[1]);
+                triProjected.p[2] = Matrix_MultiplyVector(matProj, triViewed.p[2]);
                 triProjected.col = triTransformed.col;
                 triProjected.sym = triTransformed.sym;
 
