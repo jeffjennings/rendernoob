@@ -330,6 +330,7 @@ public:
 
         meshCube.LoadFromObjectFile("ship.obj");
 
+
         // projection matrix for projection (multiplication) of a 3D vector to 2D screen.
         // vector [x,y,z] --> [a * f * x, f * y, g * z], 
         // aspect ratio a = h / w (height, width coordinates on 2d screen),
@@ -349,23 +350,26 @@ public:
         // = [a * f * x, f * y, q * (z - z_near), z] = [a * f / z * x, f / z * y, q * (z - z_near) / z, 1]
         // so:
         // near plane
-        float fNear = 0.1f;
-        float fFar = 1000.0f;
+        //float fNear = 0.1f;
+        //float fFar = 1000.0f;
         // FOV f [deg]
-        float fFov = 90.0f;
+        //float fFov = 90.0f;
         // aspect ratio a
-        float fAspectRatio = (float)ScreenHeight() / (float)ScreenWidth();
+        //float fAspectRatio = (float)ScreenHeight() / (float)ScreenWidth();
         // do tangent calculation once [rad]
-        float fFovRad = 1.0f / tanf(fFov * 0.5f / 180.0f * 3.14159f);
+        //float fFovRad = 1.0f / tanf(fFov * 0.5f / 180.0f * 3.14159f);
 
         // matrix elements:
         // a * f (first element)
-        matProj.m[0][0] = fAspectRatio * fFovRad;
-        matProj.m[1][1] = fFovRad;
-        matProj.m[2][2] = fFar / (fFar - fNear);
-        matProj.m[2][3] = 1.0f;
-        matProj.m[3][2] = -fNear * fFar / (fFar - fNear);
-        matProj.m[3][3] = 0.0f;
+        //matProj.m[0][0] = fAspectRatio * fFovRad;
+        //matProj.m[1][1] = fFovRad;
+        //matProj.m[2][2] = fFar / (fFar - fNear);
+        //matProj.m[2][3] = 1.0f;
+        //matProj.m[3][2] = -fNear * fFar / (fFar - fNear);
+        //matProj.m[3][3] = 0.0f;
+
+        // replacing the above with utility function call
+        matProj = Matrix_MakeProjection(90.0f, (float)ScreenHeight() / (float)ScreenWidth(), 0.1f, 1000.0f);
 
         return true;
     }
