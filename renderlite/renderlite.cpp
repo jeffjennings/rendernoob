@@ -94,6 +94,8 @@ private:
     // position of camera
     vec3d vCamera;
 
+
+    // vector arithmetic utility functions
     vec3d Vector_Add(vec3d& v1, vec3d& v2)
     {
         return { v1.x + v2.x, v1.x + v2.y, v1.z + v2.z };
@@ -136,14 +138,25 @@ private:
     }
 
     vec3d Vector_Normalize(vec3d& v)
-        if (w != 0.0f)
         {
         float len = Vector_Length(v);
         
         return { v.x / len, v.y / len, v.z / len };
         }
 
-    // matrix-vector multiplication function
+
+    // matrix utility functions
+    mat4x4 Matrix_MakeIdentity()
+    {
+        mat4x4 matrix;
+        
+        matrix.m[0][0] = 1.0f;
+        matrix.m[1][1] = 1.0f;
+        matrix.m[2][2] = 1.0f;
+        matrix.m[3][3] = 1.0f;
+        
+        return matrix;
+    }
     void Matrix_MultiplyVector(mat4x4& m, vec3d &i)
     {
         vec3d v;
