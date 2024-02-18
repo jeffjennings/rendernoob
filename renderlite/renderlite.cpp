@@ -8,10 +8,12 @@
 #include "olcConsoleGameEngine.h"
 using namespace std;
 
-// char asset[] = "ship.obj";
-char asset[] = "teapot.obj";
+char asset[] = "axis.obj";
+//char asset[] = "ship.obj";
+//char asset[] = "teapot.obj";
+bool rotate_obj = false;
 bool show_wireframe = false;
-float zdepth = 6.0f;
+float zdepth = 15.0f;
 
 struct vec3d
 {
