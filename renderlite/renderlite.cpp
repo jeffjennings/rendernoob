@@ -534,12 +534,12 @@ public:
         // = [a * f * x, f * y, q * (z - z_near), z] = [a * f / z * x, f / z * y, q * (z - z_near) / z, 1]
         // so:
         // near plane
-        //float fNear = 0.1f;
-        //float fFar = 1000.0f;
-        // FOV f [deg]
-        //float fFov = 90.0f;
-        // aspect ratio a
-        //float fAspectRatio = (float)ScreenHeight() / (float)ScreenWidth();
+        float fNear = 0.1f;
+        float fFar = 1000.0f;
+        // field of view [deg]
+        float fFov = 90.0f;     
+        float fAspectRatio = (float)ScreenHeight() / (float)ScreenWidth();
+        matProj = matrixProj(fFov, fAspectRatio, fNear, fFar);
         // do tangent calculation once [rad]
         //float fFovRad = 1.0f / tanf(fFov * 0.5f / 180.0f * 3.14159f);
 
