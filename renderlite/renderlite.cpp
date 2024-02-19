@@ -8,12 +8,14 @@
 #include "olcConsoleGameEngine.h"
 using namespace std;
 
-char asset[] = "axis.obj";
+//char asset[] = "axis.obj";
 //char asset[] = "ship.obj";
 //char asset[] = "teapot.obj";
-bool rotate_obj = false;
+char asset[] = "mountains.obj";
 bool show_wireframe = false;
+bool show_clipping = false;
 float zdepth = 15.0f;
+bool rotate_obj = false;
 
 struct vec3d
 {
@@ -229,7 +231,8 @@ private:
         if (nIn == 1 && nOut == 2)
         {
             // copy appearance info to new triangle
-            outTri1.col = inTri.col;
+            if (show_clipping) { outTri1.col = FG_BLUE; }
+            else { outTri1.col = inTri.col; }
             outTri1.sym = inTri.sym;
 
             // keep inside point
@@ -247,9 +250,17 @@ private:
         // 2 points on triangle outside plane, so clip to make quad (2 new triangles)
         if (nIn == 2 && nOut == 1)
         {
+            if (show_clipping) 
+            {
+                outTri1.col = FG_GREEN;
+                outTri2.col = FG_RED;
+            }
+            else 
+            {
             outTri1.col = inTri.col;
-            outTri1.sym = inTri.sym;
             outTri2.col = inTri.col;
+            }                
+            outTri1.sym = inTri.sym;
             outTri2.sym = inTri.sym;
 
             // 1st triangle has 2 inside points and 1 new point where 1 side of 
