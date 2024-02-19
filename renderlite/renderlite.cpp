@@ -693,14 +693,51 @@ public:
                 return z1 > z2;
         });
 
+
         // clear screen from top-left to bottom-right
         Fill(0, 0, ScreenWidth(), ScreenHeight(), PIXEL_SOLID, FG_BLACK);
+
+        for (auto& triToRaster : vecTrianglesToRaster)
         {
-            // rasterize triangle
-            fillTri(triProjected.p[0].x, triProjected.p[0].y,
-                triProjected.p[1].x, triProjected.p[1].y,
-                triProjected.p[2].x, triProjected.p[2].y,
-                triProjected.sym, triProjected.col);
+            // clip triangles against screen edges         
+            triangle clipped[2];
+            list<triangle> listTri;
+
+            // add initial triangle
+            listTri.push_back(triToRaster);
+            int nNewTri = 1;
+
+            for (int p = 0; p < 4; p++)
+            {
+                int nTrisToAdd = 0;
+                while (nNewTri > 0)
+                {
+                    // take triangle from front of queue
+                    triangle test = listTri.front();
+                    listTri.pop_front();
+                    nNewTri--;
+
+                    // clip it against subsequent planes
+                    switch (p)
+                    {
+                    // top edge
+                    case 0:	nTrisToAdd = triClipPlane({ 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f }, test, clipped[0], clipped[1]); break;
+                    // bottom edge
+                    case 1:	nTrisToAdd = triClipPlane({ 0.0f, (float)ScreenHeight() - 1, 0.0f }, { 0.0f, -1.0f, 0.0f }, test, clipped[0], clipped[1]); break;
+                    // left edge
+                    case 2:	nTrisToAdd = triClipPlane({ 0.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f }, test, clipped[0], clipped[1]); break;
+                    // right edge
+                    case 3:	nTrisToAdd = triClipPlane({ (float)ScreenWidth() - 1, 0.0f, 0.0f }, { -1.0f, 0.0f, 0.0f }, test, clipped[0], clipped[1]); break;
+                    }
+
+                    // add created triangles from clipping to back of queue for
+                    // subsequent clipping against next planes
+                    for (int w = 0; w < nTrisToAdd; w++)
+                        listTri.push_back(clipped[w]);
+                }
+                nNewTri = listTri.size();
+            }
+
 
             // show wireframe (triangle edges)
             if (show_wireframe) {
