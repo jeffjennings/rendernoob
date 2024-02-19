@@ -532,9 +532,6 @@ public:
             vCamera = vectorSub(vCamera, vForward);
 
 
-        // clear screen from top-left to bottom-right
-        Fill(0, 0, ScreenWidth(), ScreenHeight(), PIXEL_SOLID, FG_BLACK);
-
         // world matrix
         mat4x4 matWorld;
         matWorld = matrixIden();
