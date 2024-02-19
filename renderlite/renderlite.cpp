@@ -739,12 +739,18 @@ public:
             }
 
 
-            // show wireframe (triangle edges)
-            if (show_wireframe) {
-                drawTri(triProjected.p[0].x, triProjected.p[0].y,
-                    triProjected.p[1].x, triProjected.p[1].y,
-                    triProjected.p[2].x, triProjected.p[2].y,
-                    PIXEL_SOLID, FG_BLUE);
+            // draw final triangles
+            for (auto& tr : listTri)
+            {
+                fillTri(tr.p[0].x, tr.p[0].y, 
+                        tr.p[1].x, tr.p[1].y, 
+                        tr.p[2].x, tr.p[2].y, 
+                        tr.sym, tr.col);
+                if (show_wireframe)
+                    drawTri(tr.p[0].x, tr.p[0].y, 
+                            tr.p[1].x, tr.p[1].y, 
+                            tr.p[2].x, tr.p[2].y, 
+                            PIXEL_SOLID, FG_BLACK);
             }
         }
 
