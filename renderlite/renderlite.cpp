@@ -623,12 +623,21 @@ public:
                 triViewed.p[1] = matvecMult(matView, triTransformed.p[1]);
                 triViewed.p[2] = matvecMult(matView, triTransformed.p[2]);
 
+                // clip viewed triangle using near plane (z-plane just in front of camera),
+                // which could create 2 new triangles
+                int nClippedTri = 0;
+                triangle clipped[2];
+                nClippedTri = triClipPlane({ 0.0f, 0.0f, 0.1f }, { 0.0f, 0.0f, 1.0f }, triViewed, clipped[0], clipped[1]);
+
+                // operate on all checked triangles
+                for (int n = 0; n < nClippedTri; n++)
+                {
                 // project triangle from 3D to 2D 
-                triProjected.p[0] = matvecMult(matProj, triViewed.p[0]);
-                triProjected.p[1] = matvecMult(matProj, triViewed.p[1]);
-                triProjected.p[2] = matvecMult(matProj, triViewed.p[2]);
-                triProjected.col = triTransformed.col;
-                triProjected.sym = triTransformed.sym;
+                    triProjected.p[0] = matvecMult(matProj, clipped[n].p[0]);
+                    triProjected.p[1] = matvecMult(matProj, clipped[n].p[1]);
+                    triProjected.p[2] = matvecMult(matProj, clipped[n].p[2]);
+                    triProjected.col = clipped[n].col;
+                    triProjected.sym = clipped[n].sym;
 
                 // scale into visible screen area (normalize into Cartesian space)
                 triProjected.p[0] = vectorDiv(triProjected.p[0], triProjected.p[0].w);
