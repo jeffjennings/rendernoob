@@ -668,6 +668,7 @@ public:
                 // store triangle for z-sorting 
                 vecTrianglesToRaster.push_back(triProjected);                
             }
+            }
 
         }
 
@@ -677,11 +678,12 @@ public:
         {
                 float z1 = (t1.p[0].z + t1.p[1].z + t1.p[2].z) / 3.0f;
                 float z2 = (t2.p[0].z + t2.p[1].z + t2.p[2].z) / 3.0f;
-                // return boolean to decide if positions of the two triangles should be swapped (one in front of other)
+                // return bool for whether positions of the 2 triangles should be swapped in z
                 return z1 > z2;
         });
 
-        for (auto& triProjected : vecTrianglesToRaster)
+        // clear screen from top-left to bottom-right
+        Fill(0, 0, ScreenWidth(), ScreenHeight(), PIXEL_SOLID, FG_BLACK);
         {
             // rasterize triangle
             fillTri(triProjected.p[0].x, triProjected.p[0].y,
