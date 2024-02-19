@@ -630,6 +630,8 @@ public:
                 triViewed.p[0] = matvecMult(matView, triTransformed.p[0]);
                 triViewed.p[1] = matvecMult(matView, triTransformed.p[1]);
                 triViewed.p[2] = matvecMult(matView, triTransformed.p[2]);
+                triViewed.sym = triTransformed.sym;
+                triViewed.col = triTransformed.col;
 
                 // clip viewed triangle using near plane (z-plane just in front of camera),
                 // which could create 2 new triangles
@@ -747,7 +749,7 @@ public:
                     drawTri(tr.p[0].x, tr.p[0].y, 
                             tr.p[1].x, tr.p[1].y, 
                             tr.p[2].x, tr.p[2].y, 
-                            PIXEL_SOLID, FG_BLACK);
+                            PIXEL_SOLID, FG_YELLOW);
             }
         }
 
